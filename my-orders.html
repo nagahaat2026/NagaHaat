@@ -198,11 +198,12 @@
                 return;
             }
 
-            await loadOrders(session.user_id);
+            await loadOrders(session);
         });
 
-        async function loadOrders(userId) {
+        async function loadOrders(session) {
             const container = document.getElementById('ordersList');
+            const userId = session.user_id;
 
             try {
                 // Fetch orders joined with order items
