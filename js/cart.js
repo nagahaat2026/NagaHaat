@@ -99,7 +99,7 @@ const NagaCart = (function () {
             const { data: order, error: orderError } = await window.supabase
                 .from('orders')
                 .insert({
-                    buyer_id: session.id,
+                    buyer_id: session.user_id,
                     total_price: total,
                     status: 'confirmed'
                 })
