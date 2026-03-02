@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naga Haat - Premium Nagaland Collection</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .hero-subtitle-elegant {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-title-fancy {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--color-dark);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        /* Amazon/Fiverr Inspired Marketplace Layout */
+        .marketplace-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 992px) {
+            .marketplace-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-filters {
+                display: none;
+                /* Hide sidebar on mobile for now or make it a drawer later */
+            }
+        }
+
+        .sidebar-filters {
+            background: #fff;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            height: fit-content;
+            position: sticky;
+            top: 75px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar-filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            border: 1px solid #eee !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            transition: all 0.3s ease !important;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08) !important;
+            border-color: #ddd !important;
+        }
+
+        .cat-btn {
+            background: none;
+            border: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            color: #555;
+            text-align: left;
+            width: 100%;
+            display: block;
+        }
+
+        .cat-btn:hover {
+            background: #f0f0f0;
+            color: var(--color-primary);
+        }
+
+        .cat-btn.active {
+            background: var(--color-primary-light, #fff5f5);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .filter-group h4 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Horizontal Scroll Section */
+        .horizontal-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem 0 2rem 0;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .arrival-card {
+            min-width: calc(25% - 1.125rem);
+            flex: 0 0 calc(25% - 1.125rem);
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            transition: transform 0.2s;
+            scroll-snap-align: start;
+        }
+
+        @media (max-width: 1100px) {
+            .arrival-card {
+                min-width: calc(33.333% - 1rem);
+                flex: 0 0 calc(33.333% - 1rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .arrival-card {
+                min-width: calc(50% - 0.75rem);
+                flex: 0 0 calc(50% - 0.75rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .arrival-card {
+                min-width: calc(85% - 0.75rem);
+                flex: 0 0 calc(85% - 0.75rem);
+            }
+        }
+
+        .arrival-card:hover {
+            transform: scale(1.02);
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="site-header"
+        style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee;">
+        <div class="container navbar flex justify-between items-center"
+            style="max-width: 1440px; padding: 0.75rem 2rem;">
+            <a href="index.html" class="logo flex items-center gap-sm" style="text-decoration: none; min-width: 180px;">
+                <img src="assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 55px; width: auto; object-fit: contain;">
+            </a>
+
+            <!-- Search Bar (Amazon/Fiverr Style) -->
+            <div class="search-container flex-grow"
+                style="max-width: 700px; margin: 0 3rem; position: relative; display: flex; align-items: stretch;">
+                <select id="searchCategory"
+                    style="padding: 0 0.8rem; border: 1px solid #ddd; border-right: none; border-radius: 8px 0 0 8px; background: #f7f7f7; font-size: 0.9rem; outline: none; cursor: pointer; color: #555;">
+                    <option value="all">All Categories</option>
+                    <!-- Dynamically populated -->
+                </select>
+                <input type="text" id="globalSearch"
+                    placeholder="Search for treasures (e.g. Bhut Jolokia, Sumi Shawl...)"
+                    style="flex-grow: 1; padding: 0.8rem 1.2rem; border: 1px solid #ddd; border-radius: 0; font-size: 1rem; outline: none; transition: border-color 0.2s;">
+                <button id="searchBtn"
+                    style="background: var(--color-primary); color: white; border: none; border-radius: 0 8px 8px 0; padding: 0 1.5rem; cursor: pointer; font-weight: 600; font-size: 0.95rem;">Search</button>
+            </div>
+
+            <div class="user-actions flex items-center gap-lg" style="min-width: 250px; justify-content: flex-end;">
+                <a href="cart.html"
+                    style="position: relative; color: var(--color-dark); text-decoration: none; font-weight: 500; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🛒 <span class="hide-mobile">Cart</span>
+                    <span class="cart-counter"
+                        style="position: absolute; top: -10px; right: -15px; background: var(--color-secondary); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; display: none; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">0</span>
+                </a>
+                <div id="authContainer">
+                    <!-- Injected by ui.js -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section id="storefront" style="padding: 1rem 2rem 2rem 2rem; max-width: 1440px; margin: 0 auto;">
+            <div class="marketplace-layout">
+                <!-- Sidebar Filters -->
+                <aside class="sidebar-filters">
+                    <div class="filter-group" style="margin-bottom: 1.5rem;">
+                        <h4>Categories</h4>
+                        <div id="categoryNav">
+                            <button class="cat-btn active" data-cat="all">All Treasures</button>
+                            <!-- Other categories injected here -->
+                        </div>
+                    </div>
+
+                    <div class="filter-group" style="margin-bottom: 1.5rem;">
+                        <h4>Price Range</h4>
+                        <div class="flex flex-col gap-sm">
+                            <label class="flex items-center gap-sm" style="font-size: 0.95rem; cursor: pointer;">
+                                <input type="checkbox" class="price-filter" value="0-500"> Under ₹500
+                            </label>
+                            <label class="flex items-center gap-sm" style="font-size: 0.95rem; cursor: pointer;">
+                                <input type="checkbox" class="price-filter" value="500-2000"> ₹500 - ₹2000
+                            </label>
+                            <label class="flex items-center gap-sm" style="font-size: 0.95rem; cursor: pointer;">
+                                <input type="checkbox" class="price-filter" value="2000-5000"> ₹2000 - ₹5000
+                            </label>
+                            <label class="flex items-center gap-sm" style="font-size: 0.95rem; cursor: pointer;">
+                                <input type="checkbox" class="price-filter" value="5000+"> Over ₹5000
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group" style="margin-bottom: 1.5rem;">
+                        <h4>Average Rating</h4>
+                        <div class="flex flex-col gap-sm">
+                            <label class="flex items-center gap-sm"
+                                style="font-size: 0.95rem; cursor: pointer; color: #f5a623;">
+                                <input type="checkbox" class="rating-filter" value="4"> ★★★★☆ & Up
+                            </label>
+                            <label class="flex items-center gap-sm"
+                                style="font-size: 0.95rem; cursor: pointer; color: #f5a623;">
+                                <input type="checkbox" class="rating-filter" value="3"> ★★★☆☆ & Up
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="clearFilters" class="btn btn-outline"
+                        style="width: 100%; font-size: 0.9rem; border-radius: 6px;">Reset All Filters</button>
+                </aside>
+
+                <!-- Right Content Area -->
+                <div class="main-products" style="min-width: 0;">
+
+                    <!-- Horizontal 'New Arrivals' Carousel (Now inside grid next to sidebar) -->
+                    <div style="margin-bottom: 3.5rem;">
+                        <div class="flex justify-between items-end mb-md"
+                            style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+                            <h2 style="font-family: var(--font-heading); font-size: 1.6rem; margin: 0;">New Arrivals
+                            </h2>
+                            <a href="#"
+                                style="color: var(--color-primary); font-weight: 600; text-decoration: none; font-size: 0.85rem;">View
+                                All &rarr;</a>
+                        </div>
+                        <div id="newArrivalsScroll" class="horizontal-scroll">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-lg">
+                        <h2 id="resultHeading" style="font-family: var(--font-heading); font-size: 1.8rem; margin: 0;">
+                            All Treasures</h2>
+                        <div style="font-size: 0.95rem; color: #666;"><span id="resultCount">0</span> products</div>
+                    </div>
+
+                    <div class="showcase-grid" id="mainProductGrid">
+                        <!-- Dynamic Products Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" style="background: #111; color: white;">
+        <div class="container footer-grid" style="padding: 4rem 0 2rem 0;">
+            <div>
+                <h3 style="color: var(--color-primary); font-family: var(--font-heading); font-size: 1.8rem;">Naga Haat
+                </h3>
+                <p style="color: #888; line-height: 1.6; margin-top: 1rem;">Elevating indigenous craftsmanship. We
+                    preserve the cultural heritage of Nagaland by connecting authentic creators with discerning
+                    collectors worldwide.</p>
+            </div>
+            <div>
+                <h4
+                    style="color: white; font-family: var(--font-heading); font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; display: inline-block;">
+                    Collections</h4>
+                <ul style="color: #bbb; line-height: 2; margin-top: 1rem;">
+                    <li><a href="#" style="color: #bbb; text-decoration: none; transition: color 0.2s;"
+                            onmouseover="this.style.color='white'" onmouseout="this.style.color='#bbb'">Handloom
+                            Textiles</a></li>
+                    <li><a href="#" style="color: #bbb; text-decoration: none; transition: color 0.2s;"
+                            onmouseover="this.style.color='white'" onmouseout="this.style.color='#bbb'">Heritage
+                            Handicrafts</a></li>
+                    <li><a href="#" style="color: #bbb; text-decoration: none; transition: color 0.2s;"
+                            onmouseover="this.style.color='white'" onmouseout="this.style.color='#bbb'">Organic
+                            Produce</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4
+                    style="color: white; font-family: var(--font-heading); font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; display: inline-block;">
+                    Platform</h4>
+                <ul style="color: #bbb; line-height: 2; margin-top: 1rem;">
+                    <li><a href="register.html" style="color: #bbb; text-decoration: none; transition: color 0.2s;"
+                            onmouseover="this.style.color='white'" onmouseout="this.style.color='#bbb'">Become an
+                            Artisan</a></li>
+                    <li><a href="login.html" style="color: #bbb; text-decoration: none; transition: color 0.2s;"
+                            onmouseover="this.style.color='white'" onmouseout="this.style.color='#bbb'">Vendor Login</a>
+                    </li>
+                    <li><a href="admin/dashboard.html"
+                            style="color: #bbb; text-decoration: none; transition: color 0.2s;"
+                            onmouseover="this.style.color='white'" onmouseout="this.style.color='#bbb'">Admin Portal</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container"
+            style="border-top: 1px solid #333; padding-top: 2rem; color: #666; text-align: center; font-size: 0.9rem;">
+            &copy; 2026 Naga Haat Platform. All rights reserved. (Premium Mock Project)
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/products.js"></script>
+
+    <script>
+        let currentCategory = 'all';
+        let activeFilters = { minPrice: 0, maxPrice: Infinity, minRating: 0 };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Setup Categories
+            const categories = window.NagaProducts.getCategories();
+            const nav = document.getElementById('categoryNav');
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn';
+                btn.textContent = cat;
+                btn.onclick = () => filterByCategory(cat, btn);
+                nav.appendChild(btn);
+            });
+
+            // Search logic
+            const searchInput = document.getElementById('globalSearch');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchCategory = document.getElementById('searchCategory');
+
+            // Populate search categories
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                searchCategory.appendChild(opt);
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch(searchInput.value, searchCategory.value);
+            });
+            searchBtn.onclick = () => performSearch(searchInput.value, searchCategory.value);
+
+            // Filter logic
+            document.querySelectorAll('.price-filter').forEach(cb => {
+                cb.addEventListener('change', updateFilters);
+            });
+            document.querySelectorAll('.rating-filter').forEach(cb => {
+                cb.addEventListener('change', updateFilters);
+            });
+            document.getElementById('clearFilters').onclick = clearAllFilters;
+
+            // Initial load
+            const allProducts = await window.NagaProducts.getAllProducts();
+            renderShowcase(allProducts);
+            renderNewArrivals(allProducts.slice(0, 8));
+        });
+
+        async function performSearch(query, category) {
+            const results = await window.NagaProducts.searchProducts(query, category);
+
+            let headingText = `Search results`;
+            if (query) headingText += ` for "${query}"`;
+            if (category && category !== 'all') headingText += ` in ${category}`;
+
+            document.getElementById('resultHeading').textContent = headingText;
+            renderShowcase(results);
+        }
+
+        async function filterByCategory(category, btnClicked) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            if (btnClicked) btnClicked.classList.add('active');
+            else document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
+
+            document.getElementById('resultHeading').textContent = category === 'all' ? 'All Treasures' : category;
+            applyAllFilters();
+        }
+
+        function updateFilters() {
+            const checkedPrice = document.querySelector('.price-filter:checked');
+            if (checkedPrice) {
+                const val = checkedPrice.value;
+                if (val === '0-500') { activeFilters.minPrice = 0; activeFilters.maxPrice = 500; }
+                else if (val === '500-2000') { activeFilters.minPrice = 500; activeFilters.maxPrice = 2000; }
+                else if (val === '2000-5000') { activeFilters.minPrice = 2000; activeFilters.maxPrice = 5000; }
+                else if (val === '5000+') { activeFilters.minPrice = 5000; activeFilters.maxPrice = Infinity; }
+            } else {
+                activeFilters.minPrice = 0;
+                activeFilters.maxPrice = Infinity;
+            }
+
+            const checkedRating = document.querySelector('.rating-filter:checked');
+            activeFilters.minRating = checkedRating ? parseInt(checkedRating.value) : 0;
+
+            applyAllFilters();
+        }
+
+        async function applyAllFilters() {
+            const products = await window.NagaProducts.getProductsByCategory(currentCategory, activeFilters);
+            renderShowcase(products);
+        }
+
+        function clearAllFilters() {
+            activeFilters = { minPrice: 0, maxPrice: Infinity, minRating: 0 };
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            filterByCategory('all');
+        }
+
+        function renderNewArrivals(products) {
+            const container = document.getElementById('newArrivalsScroll');
+            container.innerHTML = products.map(p => `
+                <div class="arrival-card">
+                    <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+                        <div style="position: relative; overflow: hidden; background: #f9f9f9; border-radius: 10px 10px 0 0;">
+                            <img src="${p.image_url}" alt="${p.title}" style="width: 100%; height: 180px; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1rem;">
+                            <h4 style="font-size: 0.9rem; margin-bottom: 0.4rem; height: 2.2rem; overflow: hidden; line-height: 1.2;">${p.title}</h4>
+                            <div style="color: var(--color-primary); font-weight: 700; font-size: 1rem;">${window.NagaHaatUI.formatCurrency(p.price)}</div>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function renderShowcase(products) {
+            const grid = document.getElementById('mainProductGrid');
+            document.getElementById('resultCount').textContent = products.length;
+
+            if (products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #888; font-size: 1.2rem; background: #fafafa; border-radius: 8px; border: 1px dashed #ccc;">No treasures matched your criteria. Try adjusting your filters!</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(p => {
+                const stars = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+                return `
+                <a href="product.html?id=${p.id}" class="card product-card flex flex-col" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; background: white;">
+                    <div style="position: relative; overflow: hidden; background: #f9f9f9; border-bottom: 1px solid #eee;">
+                        <img src="${p.image_url}" alt="${p.title}" style="width: 100%; height: 180px; object-fit: cover;">
+                        <span style="position: absolute; bottom: 0.75rem; left: 0.75rem; background: rgba(0,0,0,0.7); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">${p.category}</span>
+                    </div>
+                    <div style="padding: 1.25rem; flex-grow: 1; display: flex; flex-direction: column;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--color-dark); font-family: var(--font-heading); line-height: 1.3; height: 2.8rem; overflow: hidden;">${p.title}</h3>
+                        
+                        <div class="flex items-center gap-xs" style="margin-bottom: 0.5rem;">
+                            <span style="color: #f5a623; font-size: 0.9rem;">${stars}</span>
+                            <span style="color: #666; font-size: 0.8rem; margin-left: 4px;">(${p.reviewCount || 0})</span>
+                        </div>
+
+                        <div style="margin-top: auto;">
+                            <div style="font-size: 1.4rem; font-weight: 800; color: #111; margin-bottom: 0.2rem;">${window.NagaHaatUI.formatCurrency(p.price)}</div>
+                            <div style="font-size: 0.75rem; color: #2e7d32; font-weight: 600;">Get it by tomorrow</div>
+                        </div>
+                    </div>
+                </a>
+            `}).join('');
+        }
+    </script>
+    </script>
+</body>
+
+</html>

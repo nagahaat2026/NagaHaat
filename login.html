@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Naga Haat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: var(--color-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container navbar flex justify-center">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 60px; width: auto; object-fit: contain;">
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="auth-container">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+
+                    <div id="errorMessage" style="color: red; margin-bottom: 1rem; display: none;"></div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign
+                        In</button>
+                </form>
+
+                <p style="text-align: center; margin-top: 2rem; color: #666;">
+                    Don't have an account? <a href="register.html"
+                        style="color: var(--color-primary); font-weight: 500;">Register here</a>
+                </p>
+                <div
+                    style="margin-top:2rem; padding:1rem; background:#f9f9f9; border-radius:4px; font-size:0.85rem; color:#666;">
+                    <strong>Dev Note (Mock Auth):</strong><br>
+                    Admin: admin@nagahaat.com / password<br>
+                    Vendor: vendor@nagahaat.com / password<br>
+                    Buyer: buyer@nagahaat.com / password
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/notifications.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.style.display = 'none';
+
+            try {
+                await window.NagaAuth.login(email, password);
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

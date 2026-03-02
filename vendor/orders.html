@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Orders - Naga Haat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        .dashboard-sidebar {
+            background: var(--color-white);
+            border-right: 1px solid #eee;
+            padding: var(--spacing-md);
+        }
+
+        .dashboard-nav {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+
+        .dashboard-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--color-dark);
+            border-radius: var(--border-radius-sm);
+            transition: background 0.2s;
+        }
+
+        .dashboard-nav a:hover,
+        .dashboard-nav a.active {
+            background: rgba(139, 0, 0, 0.05);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .dashboard-content {
+            padding: var(--spacing-xl);
+            background: #fafafa;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-white);
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f4f4f4;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-shipped {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container navbar flex justify-between items-center" style="max-width: 100%; padding: 0.5rem 2rem;">
+            <a href="../index.html" class="logo flex items-center gap-sm">
+                <img src="../assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 40px; width: auto; object-fit: contain; filter: brightness(0) invert(1);">
+                <span
+                    style="background: #388e3c; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold;">VENDOR</span>
+            </a>
+            <div class="flex items-center gap-md">
+                <span id="vendorNameDisplay" style="font-weight: 500;">...</span>
+                <button onclick="window.NagaAuth.logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sign
+                    Out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <ul class="dashboard-nav">
+                <li><a href="dashboard.html">Overview</a></li>
+                <li><a href="add-product.html">Add Product</a></li>
+                <li><a href="orders.html" class="active">Orders</a></li>
+            </ul>
+        </aside>
+
+        <main class="dashboard-content">
+            <h2 style="margin-bottom: 2rem;">Customer Orders</h2>
+
+            <div
+                style="background: #e1f5fe; color: #0277bd; padding: 1rem; border-radius: var(--border-radius-sm); margin-bottom: 2rem;">
+                <strong>Note:</strong> Order data is currently mocked for layout purposes. Cart integration is planned
+                for Phase 6.
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#ORD-4921</td>
+                            <td>Today, 10:30 AM</td>
+                            <td>1x Chakhesang Shawl</td>
+                            <td>₹3,500.00</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <select class="form-control" style="padding: 4px; font-size: 0.9rem;"
+                                    onchange="alert('Order status update mocked')">
+                                    <option>Pending</option>
+                                    <option>Shipped</option>
+                                    <option>Delivered</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-4882</td>
+                            <td>Yesterday</td>
+                            <td>3x Smoked King Chilli</td>
+                            <td>₹1,350.00</td>
+                            <td><span class="status-badge status-shipped">Shipped</span></td>
+                            <td>
+                                <select class="form-control" style="padding: 4px; font-size: 0.9rem;"
+                                    onchange="alert('Order status update mocked')">
+                                    <option>Pending</option>
+                                    <option selected>Shipped</option>
+                                    <option>Delivered</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-4710</td>
+                            <td>Oct 12, 2026</td>
+                            <td>1x Authentic Naga Spear</td>
+                            <td>₹1,200.00</td>
+                            <td><span class="status-badge status-delivered">Delivered</span></td>
+                            <td>
+                                <select class="form-control" style="padding: 4px; font-size: 0.9rem;" disabled>
+                                    <option>Delivered</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/roleManager.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/products.js"></script>
+    <script src="../js/vendor.js"></script>
+</body>
+
+</html>

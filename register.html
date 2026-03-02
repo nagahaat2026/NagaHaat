@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Naga Haat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .auth-container {
+            max-width: 450px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: var(--color-white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container navbar flex justify-center">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 60px; width: auto; object-fit: contain;">
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="auth-container">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Create an Account</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" minlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Account Type</label>
+                        <select class="form-control" id="role" required>
+                            <option value="buyer">Shopper / Buyer</option>
+                            <option value="vendor">Artisan / Vendor</option>
+                        </select>
+                        <small style="color: #666; display: block; margin-top: 0.5rem;">Vendors will need admin approval
+                            to sell.</small>
+                    </div>
+
+                    <div id="errorMessage" style="color: red; margin-bottom: 1rem; display: none;"></div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create
+                        Account</button>
+                </form>
+
+                <p style="text-align: center; margin-top: 2rem; color: #666;">
+                    Already have an account? <a href="login.html"
+                        style="color: var(--color-primary); font-weight: 500;">Sign in here</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/notifications.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.style.display = 'none';
+
+            try {
+                await window.NagaAuth.register(email, password, { full_name: fullName, role });
+                // If successful, auth.js handles redirect
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

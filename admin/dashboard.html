@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Naga Haat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        .dashboard-sidebar {
+            background: #222;
+            color: white;
+            padding: var(--spacing-md);
+        }
+
+        .dashboard-nav {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+
+        .dashboard-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #ccc;
+            border-radius: var(--border-radius-sm);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dashboard-nav a:hover,
+        .dashboard-nav a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 500;
+        }
+
+        .dashboard-content {
+            padding: var(--spacing-xl);
+            background: #fafafa;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid #1976d2;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header" style="background: #111; border-bottom: none;">
+        <div class="container navbar flex justify-between items-center" style="max-width: 100%; padding: 0.5rem 2rem;">
+            <a href="../index.html" class="logo flex items-center gap-sm">
+                <img src="../assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 40px; width: auto; object-fit: contain; filter: brightness(0) invert(1);">
+                <span
+                    style="background: #d32f2f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold;">ADMIN</span>
+            </a>
+            <div class="flex items-center gap-md" style="color: white;">
+                <span id="adminNameDisplay" style="font-weight: 500;">...</span>
+                <button onclick="window.NagaAuth.logout()" class="btn btn-outline"
+                    style="padding: 0.5rem 1rem; border-color: #555; color: #ccc;">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <ul class="dashboard-nav">
+                <li><a href="dashboard.html" class="active">Platform Overview</a></li>
+                <li><a href="vendors.html">Vendor Management</a></li>
+                <li><a href="products.html">Product Moderation</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <h2 style="margin-bottom: 2rem;">Platform Overview</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Registered Users</div>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: var(--color-dark);" id="adminStatUsers">0
+                    </div>
+                </div>
+                <div class="stat-card" style="border-left-color: #388e3c;">
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Vendors</div>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: var(--color-dark);" id="adminStatVendors">0
+                    </div>
+                </div>
+                <div class="stat-card" style="border-left-color: #f57c00;">
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Live Products</div>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: var(--color-dark);" id="adminStatProducts">0
+                    </div>
+                </div>
+                <div class="stat-card" style="border-left-color: #8e24aa;">
+                    <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Platform Volume</div>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: var(--color-dark);">₹45.2K</div>
+                </div>
+            </div>
+
+            <div
+                style="background: white; padding: 2rem; border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm);">
+                <h3 style="margin-bottom: 1rem;">System Health</h3>
+                <p style="color: #555;">All systems running optimally. Mock Database is currently active.</p>
+                <div style="margin-top: 1rem; color: #2e7d32; font-weight: 600;">
+                    ✓ Auth Service (Mocked)<br>
+                    ✓ Database Service (Mocked)<br>
+                    ✓ Storage Service (Mocked)
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/roleManager.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/products.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+
+</html>

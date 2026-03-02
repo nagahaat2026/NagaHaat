@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Vendor Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        .dashboard-sidebar {
+            background: var(--color-white);
+            border-right: 1px solid #eee;
+            padding: var(--spacing-md);
+        }
+
+        .dashboard-nav {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+
+        .dashboard-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--color-dark);
+            border-radius: var(--border-radius-sm);
+            transition: background 0.2s;
+        }
+
+        .dashboard-nav a:hover,
+        .dashboard-nav a.active {
+            background: rgba(139, 0, 0, 0.05);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .dashboard-content {
+            padding: var(--spacing-xl);
+            background: #fafafa;
+        }
+
+        .form-container {
+            background: var(--color-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            max-width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container navbar flex justify-between items-center" style="max-width: 100%; padding: 0.5rem 2rem;">
+            <a href="../index.html" class="logo flex items-center gap-sm">
+                <img src="../assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 40px; width: auto; object-fit: contain; filter: brightness(0) invert(1);">
+                <span
+                    style="background: #388e3c; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold;">VENDOR</span>
+            </a>
+            <div class="flex items-center gap-md">
+                <span id="vendorNameDisplay" style="font-weight: 500;">...</span>
+                <button onclick="window.NagaAuth.logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sign
+                    Out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <ul class="dashboard-nav">
+                <li><a href="dashboard.html">Overview</a></li>
+                <li><a href="add-product.html" class="active">Add Product</a></li>
+                <li><a href="orders.html">Orders</a></li>
+            </ul>
+        </aside>
+
+        <main class="dashboard-content">
+            <h2 style="margin-bottom: 2rem;">Add New Product</h2>
+
+            <div class="form-container">
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label class="form-label">Product Title</label>
+                        <input type="text" id="title" class="form-control" required placeholder="e.g. Ao Warrior Shawl">
+                    </div>
+
+                    <div class="grid grid-cols-2">
+                        <div class="form-group">
+                            <label class="form-label">Price (₹)</label>
+                            <input type="number" id="price" class="form-control" required min="1" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stock Quantity</label>
+                            <input type="number" id="stock" class="form-control" required min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="category" class="form-control" required>
+                            <option value="">Select a category</option>
+                            <option value="Handloom & Textiles">Handloom & Textiles</option>
+                            <option value="Handicrafts & Art">Handicrafts & Art</option>
+                            <option value="Organic Produce">Organic Produce</option>
+                            <option value="Bamboo Crafts">Bamboo Crafts</option>
+                            <option value="Local Foods">Local Foods</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Product Image</label>
+                        <input type="file" id="productImage" class="form-control" accept="image/*" required>
+                        <div id="imagePreviewContainer" style="margin-top: 1rem; display: none;">
+                            <img id="imagePreview" src="" alt="Preview"
+                                style="max-width: 200px; border-radius: 8px; border: 1px solid #eee;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description & Cultural Story</label>
+                        <textarea id="description" class="form-control" rows="5" required
+                            placeholder="Tell the story behind this product, the materials used, and its cultural significance..."></textarea>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary" style="padding: 1rem 2rem;">Add Product to
+                            Shop</button>
+                        <a href="dashboard.html" class="btn btn-outline" style="margin-left: 1rem;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/supabaseClient.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/roleManager.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/products.js"></script>
+    <script src="../js/vendor.js"></script>
+</body>
+
+</html>

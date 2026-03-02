@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Naga Haat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+        }
+
+        .product-image-container {
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .main-product-image {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4/4;
+            object-fit: cover;
+        }
+
+        .vendor-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .vendor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            border-color: var(--color-primary);
+        }
+
+        .qty-input {
+            width: 50px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container navbar">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.jpeg" alt="Naga Haat Logo"
+                    style="height: 45px; width: auto; object-fit: contain;">
+            </a>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">Cart (0)</a>
+                <a href="login.html" class="btn btn-primary" id="loginBtn">Sign In</a>
+                <button id="logoutBtn" class="btn btn-outline" style="display:none;">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mb-xl">
+        <div id="loadingState" style="text-align: center; padding: 4rem;">Loading product...</div>
+        <div id="errorState" style="text-align: center; padding: 4rem; color: red; display: none;">Product not found.
+        </div>
+
+        <div class="product-detail-grid" id="productContainer" style="display: none;">
+            <!-- Left: Image -->
+            <div class="product-image-container">
+                <img id="pdImage" src="" alt="Product" class="main-product-image">
+            </div>
+
+            <!-- Right: Details -->
+            <div>
+                <nav style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                    <a href="index.html" style="color: var(--color-primary); text-decoration: none;">Storefront</a> &gt;
+                    <span id="bcCategory">Category</span>
+                </nav>
+
+                <h1 id="pdTitle" style="font-size: 2.5rem; margin-bottom: 0.5rem; font-family: var(--font-heading);">
+                    Product Title</h1>
+
+                <div class="flex items-center gap-sm" style="margin-bottom: 1.5rem;">
+                    <span id="pdStars" style="color: #f5a623; font-size: 1.1rem;"></span>
+                    <span id="pdReviewCount"
+                        style="color: var(--color-primary); font-size: 0.95rem; cursor: pointer;"></span>
+                </div>
+
+                <div
+                    style="border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 1.5rem 0; margin-bottom: 1.5rem;">
+                    <div id="pdPrice" style="color: #111; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">
+                        ₹0.00</div>
+                    <div style="color: #2e7d32; font-weight: 700; font-size: 1rem;">FREE delivery Wed, March 5</div>
+                    <div style="font-size: 0.85rem; color: #555; margin-top: 0.25rem;">Or fastest delivery <span
+                            style="font-weight: 700;">Tomorrow</span>. Order within <span style="color: #b12704;">4 hrs
+                            12 mins</span>.</div>
+                </div>
+
+                <p id="pdDescription" style="color: #333; line-height: 1.7; margin-bottom: 2rem; font-size: 1.05rem;">
+                </p>
+
+                <div class="vendor-info">
+                    <div class="vendor-avatar" id="pdVendorInitial">V</div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: #666;">Sold by</div>
+                        <div id="pdVendorName"
+                            style="font-weight: 600; font-size: 1.1rem; color: var(--color-primary);">Vendor Name</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <span id="pdStock" style="color: #2e7d32; font-weight: 700; font-size: 1.1rem;">In Stock</span>
+                </div>
+
+                <div
+                    style="background: #fdfdfd; border: 1px solid #eee; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <div class="quantity-control">
+                        <label style="font-weight: 600; font-size: 0.9rem;">Quantity:</label>
+                        <button class="qty-btn" id="qtyMinus">-</button>
+                        <input type="number" id="qtyInput" value="1" min="1" class="qty-input" readonly>
+                        <button class="qty-btn" id="qtyPlus">+</button>
+                    </div>
+
+                    <button class="btn btn-primary"
+                        style="width: 100%; font-size: 1.1rem; padding: 1rem; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 12px rgba(139, 0, 0, 0.2);"
+                        id="addToCartBtn">Add to Cart</button>
+
+                    <button class="btn btn-outline"
+                        style="width: 100%; font-size: 1.1rem; padding: 1rem; border-radius: 8px; font-weight: 700; margin-top: 0.75rem; border-color: #f5a623; color: #111; background: #ff990022;">Buy
+                        Now</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; color: #555;">
+                    <div class="flex items-center gap-xs">🛡️ Authenticity Guarantee</div>
+                    <div class="flex items-center gap-xs">📦 Secure Transaction</div>
+                    <div class="flex items-center gap-xs">↩️ 15-Day Return Policy</div>
+                    <div class="flex items-center gap-xs">📍 Shipped from Kohima</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer mt-xl">
+        <div class="container" style="text-align: center; color: #bbb; font-size: 0.9rem; padding: 2rem 0;">
+            &copy; 2026 Naga Haat Platform. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/products.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get Product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('errorState').style.display = 'block';
+                return;
+            }
+
+            try {
+                const product = await window.NagaProducts.getProductById(productId);
+
+                // Populate UI
+                document.title = `${product.title} - Naga Haat`;
+                document.getElementById('pdImage').src = product.image_url;
+                document.getElementById('pdImage').alt = product.title;
+                document.getElementById('pdTitle').textContent = product.title;
+                document.getElementById('pdPrice').textContent = window.NagaHaatUI.formatCurrency(product.price);
+                document.getElementById('pdDescription').textContent = product.description;
+                document.getElementById('pdVendorName').textContent = product.vendor_name;
+                document.getElementById('pdVendorInitial').textContent = product.vendor_name.charAt(0).toUpperCase();
+                document.getElementById('bcCategory').textContent = product.category;
+
+                // Ratings
+                const stars = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));
+                document.getElementById('pdStars').textContent = stars;
+                document.getElementById('pdReviewCount').textContent = `${product.reviewCount || 0} ratings`;
+
+                const stockEl = document.getElementById('pdStock');
+                if (product.stock <= 0) {
+                    stockEl.textContent = 'Currently Unavailable';
+                    stockEl.style.color = '#b12704';
+                    document.getElementById('addToCartBtn').disabled = true;
+                    document.getElementById('addToCartBtn').style.opacity = '0.5';
+                } else if (product.stock < 10) {
+                    stockEl.textContent = `Only ${product.stock} left in stock - order soon.`;
+                    stockEl.style.color = '#b12704';
+                }
+
+                // Show container
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('productContainer').style.display = 'grid';
+
+                // Quantity Handlers
+                const qtyInput = document.getElementById('qtyInput');
+                document.getElementById('qtyPlus').onclick = () => {
+                    let max = parseInt(product.stock);
+                    let current = parseInt(qtyInput.value);
+                    if (current < max) qtyInput.value = current + 1;
+                };
+                document.getElementById('qtyMinus').onclick = () => {
+                    let current = parseInt(qtyInput.value);
+                    if (current > 1) qtyInput.value = current - 1;
+                };
+
+                // Add to Cart
+                const btn = document.getElementById('addToCartBtn');
+                btn.onclick = () => {
+                    const quantity = parseInt(qtyInput.value) || 1;
+                    btn.disabled = true;
+                    btn.innerHTML = 'Adding to Cart...';
+
+                    window.NagaCart.addToCart(product, quantity);
+
+                    setTimeout(() => {
+                        window.location.href = 'cart.html';
+                    }, 400);
+                };
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('errorState').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>
