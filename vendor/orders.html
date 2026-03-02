@@ -129,12 +129,6 @@
         <main class="dashboard-content">
             <h2 style="margin-bottom: 2rem;">Customer Orders</h2>
 
-            <div
-                style="background: #e1f5fe; color: #0277bd; padding: 1rem; border-radius: var(--border-radius-sm); margin-bottom: 2rem;">
-                <strong>Note:</strong> Order data is currently mocked for layout purposes. Cart integration is planned
-                for Phase 6.
-            </div>
-
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
@@ -144,52 +138,12 @@
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
+                            <th>Delivery Location</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>#ORD-4921</td>
-                            <td>Today, 10:30 AM</td>
-                            <td>1x Chakhesang Shawl</td>
-                            <td>₹3,500.00</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                            <td>
-                                <select class="form-control" style="padding: 4px; font-size: 0.9rem;"
-                                    onchange="alert('Order status update mocked')">
-                                    <option>Pending</option>
-                                    <option>Shipped</option>
-                                    <option>Delivered</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-4882</td>
-                            <td>Yesterday</td>
-                            <td>3x Smoked King Chilli</td>
-                            <td>₹1,350.00</td>
-                            <td><span class="status-badge status-shipped">Shipped</span></td>
-                            <td>
-                                <select class="form-control" style="padding: 4px; font-size: 0.9rem;"
-                                    onchange="alert('Order status update mocked')">
-                                    <option>Pending</option>
-                                    <option selected>Shipped</option>
-                                    <option>Delivered</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-4710</td>
-                            <td>Oct 12, 2026</td>
-                            <td>1x Authentic Naga Spear</td>
-                            <td>₹1,200.00</td>
-                            <td><span class="status-badge status-delivered">Delivered</span></td>
-                            <td>
-                                <select class="form-control" style="padding: 4px; font-size: 0.9rem;" disabled>
-                                    <option>Delivered</option>
-                                </select>
-                            </td>
-                        </tr>
+                    <tbody id="vendorOrderList">
+                        <!-- Loaded by vendor.js -->
                     </tbody>
                 </table>
             </div>

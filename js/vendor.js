@@ -100,6 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadVendorProducts(session.user_id);
     }
 
+    // Load Vendor Orders
+    const vendorOrderList = document.getElementById('vendorOrderList');
+    if (vendorOrderList) {
+        loadVendorOrders(session.user_id);
+    }
+
     // Handle Edit Product Page Logic
     const editProductForm = document.getElementById('editProductForm');
     if (editProductForm) {
@@ -228,6 +234,85 @@ async function loadVendorProducts(vendorId) {
     } catch (err) {
         console.error(err);
         tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Failed to load products.</td></tr>';
+    }
+}
+
+async function loadVendorOrders(vendorId) {
+    const tbody = document.getElementById('vendorOrderList');
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading orders...</td></tr>';
+
+    try {
+        // Fetch orders where at least one item belongs to this vendor
+        // For simplicity in this demo, we fetch all order items and filter
+        const { data: orderItems, error } = await window.supabaseClient
+            .from('order_items')
+            .select(`
+                *,
+                orders (*),
+                products (*)
+            `)
+            .eq('products.vendor_id', vendorId);
+
+        if (error) throw error;
+
+        // Group by order ID
+        const ordersMap = {};
+        orderItems.forEach(item => {
+            if (!item.orders) return; // Skip if order details missing
+            if (!ordersMap[item.order_id]) {
+                ordersMap[item.order_id] = {
+                    ...item.orders,
+                    items: []
+                };
+            }
+            ordersMap[item.order_id].items.push(item);
+        });
+
+        const orders = Object.values(ordersMap).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No orders found yet.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = orders.map(order => {
+            const date = new Date(order.created_at).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short'
+            });
+
+            const itemsText = order.items.map(i => `${i.quantity}x ${i.products.title}`).join(', ');
+
+            return `
+                <tr>
+                    <td>#${order.id.slice(0, 8)}</td>
+                    <td>${date}</td>
+                    <td style="max-width: 250px;">${itemsText}</td>
+                    <td>${window.NagaHaatUI.formatCurrency(order.total_price)}</td>
+                    <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                    <td>
+                        <div style="font-size: 0.85rem; line-height: 1.3;">
+                            <div style="font-weight: 500;">${order.building}</div>
+                            <div>${order.ward ? order.ward + ', ' : ''}${order.town}</div>
+                            <div>${order.district}, ${order.state}</div>
+                            ${order.landmark ? `<div style="font-style: italic; font-size: 0.75rem; color: #777;">Landmark: ${order.landmark}</div>` : ''}
+                            ${order.latitude ? `<div style="margin-top: 0.3rem;"><a href="https://www.google.com/maps?q=${order.latitude},${order.longitude}" target="_blank" style="color: var(--color-primary); font-weight: 500;">📍 View Location Map</a></div>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <select class="form-control" style="padding: 4px; font-size: 0.9rem;" onchange="alert('Status updates coming in Phase 7')">
+                            <option ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                            <option ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        </select>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Failed to load orders.</td></tr>';
     }
 }
 

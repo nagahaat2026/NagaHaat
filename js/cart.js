@@ -85,22 +85,29 @@ const NagaCart = (function () {
         });
     }
 
-    async function createOrderInSupabase(paymentId) {
+    async function createOrderInSupabase(paymentId, shippingAddress, latitude, longitude, addressObj) {
         const session = window.NagaAuth.getSession();
         if (!session) return { error: 'Not authenticated' };
 
         const cart = getCart();
-        const subtotal = getCartTotal();
-        const shipping = 0;
-        const total = subtotal;
+        const total = NagaCart.getCartTotal();
 
         try {
-            // 1. Create order record
-            const { data: order, error: orderError } = await window.supabaseClient
+            // 1. Create the Order
+            const { data: orderData, error: orderError } = await window.supabaseClient
                 .from('orders')
                 .insert({
                     buyer_id: session.user_id,
                     total_price: total,
+                    shipping_address: shippingAddress,
+                    latitude: latitude,
+                    longitude: longitude,
+                    state: addressObj.state,
+                    district: addressObj.district,
+                    town: addressObj.town,
+                    ward: addressObj.ward,
+                    building: addressObj.building,
+                    landmark: addressObj.landmark,
                     status: 'confirmed'
                 })
                 .select()

@@ -266,6 +266,17 @@
                                         <strong>SHIP TO</strong>
                                         ${session.full_name}
                                     </div>
+                                    <div style="flex-grow: 1; min-width: 200px;">
+                                        <strong>SHIPPING ADDRESS</strong>
+                                        <div style="font-size: 0.85rem; color: #555; line-height: 1.4;">
+                                            <div>${order.building}, ${order.ward ? order.ward + ', ' : ''}${order.town}</div>
+                                            <div>${order.district}, ${order.state}</div>
+                                            ${order.landmark ? `<div style="font-style: italic; color: #888;">Landmark: ${order.landmark}</div>` : ''}
+                                            ${order.latitude && order.longitude ?
+                            `<div style="margin-top: 0.5rem;"><a href="https://www.google.com/maps?q=${order.latitude},${order.longitude}" target="_blank" style="color: var(--color-primary); font-weight: 500; text-decoration: none;">📍 View Exact Location on Map</a></div>` :
+                            ''}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
                                     <span class="status-badge status-${order.status}">${order.status}</span>
