@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Protect My Orders (Buyer)
+    if (path.includes('/my-orders.html') && !session) {
+        window.location.href = 'login.html';
+        return;
+    }
+
     // Protect Vendor Routes
     if (path.includes('/vendor/')) {
         if (!session) {

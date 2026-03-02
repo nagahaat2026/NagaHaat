@@ -18,6 +18,7 @@ const NagaHaatUI = (function () {
             authContainer.innerHTML = `
                 <div class="flex items-center gap-sm">
                     <span style="font-size: 0.9rem; font-weight: 500;">Hi, ${session.full_name.split(' ')[0]}</span>
+                    <a href="${rootPrefix}my-orders.html" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">My Orders</a>
                     <button onclick="window.NagaAuth.logout()" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Logout</button>
                 </div>
             `;
