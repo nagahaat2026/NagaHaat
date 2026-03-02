@@ -96,7 +96,7 @@ const NagaCart = (function () {
 
         try {
             // 1. Create order record
-            const { data: order, error: orderError } = await window.supabase
+            const { data: order, error: orderError } = await window.supabaseClient
                 .from('orders')
                 .insert({
                     buyer_id: session.user_id,
@@ -116,7 +116,7 @@ const NagaCart = (function () {
                 price: item.price
             }));
 
-            const { error: itemsError } = await window.supabase
+            const { error: itemsError } = await window.supabaseClient
                 .from('order_items')
                 .insert(orderItems);
 
