@@ -296,8 +296,8 @@
 
             // Render Summary
             const subtotal = NagaCart.getCartTotal();
-            const shipping = subtotal > 0 ? 150 : 0;
-            const total = subtotal + shipping;
+            const shipping = 0;
+            const total = subtotal;
 
             layout.innerHTML = `
                 <div class="cart-items">
@@ -311,8 +311,8 @@
                         <span>${window.NagaHaatUI.formatCurrency(subtotal)}</span>
                     </div>
                     <div class="summary-row">
-                        <span>Shipping Estimate</span>
-                        <span>${window.NagaHaatUI.formatCurrency(shipping)}</span>
+                        <span>Shipping</span>
+                        <span style="color: #388e3c; font-weight: 500;">FREE</span>
                     </div>
                     
                     <div class="summary-total">
@@ -337,7 +337,7 @@
                 return;
             }
 
-            const total = NagaCart.getCartTotal() + (NagaCart.getCartTotal() > 0 ? 150 : 0);
+            const total = NagaCart.getCartTotal();
 
             const options = {
                 "key": RAZORPAY_KEY_ID,

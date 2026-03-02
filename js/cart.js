@@ -91,8 +91,8 @@ const NagaCart = (function () {
 
         const cart = getCart();
         const subtotal = getCartTotal();
-        const shipping = subtotal > 0 ? 150 : 0;
-        const total = subtotal + shipping;
+        const shipping = 0;
+        const total = subtotal;
 
         try {
             // 1. Create order record
