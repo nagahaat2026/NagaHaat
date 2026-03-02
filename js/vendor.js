@@ -100,9 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loadVendorProducts(session.user_id);
     }
 
-    // Load Vendor Orders
+    // Load Vendor Orders (also used for stats on dashboard overview)
     const vendorOrderList = document.getElementById('vendorOrderList');
-    if (vendorOrderList) {
+    const statTotalSales = document.getElementById('statTotalSales');
+    if (vendorOrderList || statTotalSales) {
         loadVendorOrders(session.user_id);
     }
 
@@ -239,11 +240,8 @@ async function loadVendorProducts(vendorId) {
 
 async function loadVendorOrders(vendorId) {
     const tbody = document.getElementById('vendorOrderList');
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading orders...</td></tr>';
 
     try {
-        // Fetch orders where at least one item belongs to this vendor
-        // For simplicity in this demo, we fetch all order items and filter
         const { data: orderItems, error } = await window.supabaseClient
             .from('order_items')
             .select(`
@@ -255,35 +253,49 @@ async function loadVendorOrders(vendorId) {
 
         if (error) throw error;
 
-        // Group by order ID
         const ordersMap = {};
+        let totalSales = 0;
+        let pendingCount = 0;
+
         orderItems.forEach(item => {
-            if (!item.orders) return; // Skip if order details missing
+            if (!item.orders) return;
+
+            totalSales += (item.price * item.quantity);
+
             if (!ordersMap[item.order_id]) {
                 ordersMap[item.order_id] = {
                     ...item.orders,
                     items: []
                 };
+                if (item.orders.status === 'confirmed') {
+                    pendingCount++;
+                }
             }
             ordersMap[item.order_id].items.push(item);
         });
 
+        const salesEl = document.getElementById('statTotalSales');
+        const pendingEl = document.getElementById('statPendingOrders');
+        if (salesEl) salesEl.textContent = window.NagaHaatUI.formatCurrency(totalSales);
+        if (pendingEl) pendingEl.textContent = pendingCount;
+
         const orders = Object.values(ordersMap).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-        if (orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No orders found yet.</td></tr>';
-            return;
-        }
+        if (tbody) {
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">No orders found yet.</td></tr>';
+                return;
+            }
 
-        tbody.innerHTML = orders.map(order => {
-            const date = new Date(order.created_at).toLocaleDateString('en-IN', {
-                day: 'numeric',
-                month: 'short'
-            });
+            tbody.innerHTML = orders.map(order => {
+                const date = new Date(order.created_at).toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'short'
+                });
 
-            const itemsText = order.items.map(i => `${i.quantity}x ${i.products.title}`).join(', ');
+                const itemsText = order.items.map(i => `${i.quantity}x ${i.products.title}`).join(', ');
 
-            return `
+                return `
                 <tr>
                     <td>#${order.id.slice(0, 8)}</td>
                     <td>${date}</td>
@@ -308,11 +320,11 @@ async function loadVendorOrders(vendorId) {
                     </td>
                 </tr>
             `;
-        }).join('');
-
+            }).join('');
+        }
     } catch (err) {
         console.error(err);
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Failed to load orders.</td></tr>';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Failed to load orders.</td></tr>';
     }
 }
 
