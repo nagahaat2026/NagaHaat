@@ -527,10 +527,10 @@
 
                     if (res.success) {
                         alert(`Thank you for your order! Payment successful. Transaction ID: ${response.razorpay_payment_id}`);
-                        window.location.href = 'index.html';
+                        window.location.href = 'my-orders.html';
                     } else {
-                        alert("Payment successful, but we failed to save your order. Please contact support.");
-                        console.error(res.error);
+                        alert("Payment successful, but we failed to save your order to our database. Error: " + (res.error || "Unknown Error"));
+                        console.error('Order Save Error:', res.error);
                     }
                 },
                 "prefill": {

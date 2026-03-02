@@ -117,7 +117,7 @@ const NagaCart = (function () {
 
             // 2. Create order items
             const orderItems = cart.map(item => ({
-                order_id: order.id,
+                order_id: orderData.id,
                 product_id: item.id,
                 quantity: item.quantity,
                 price: item.price
@@ -132,7 +132,7 @@ const NagaCart = (function () {
             // 3. Clear cart
             clearCart();
 
-            return { success: true, orderId: order.id };
+            return { success: true, orderId: orderData.id };
         } catch (error) {
             console.error('Order creation failed:', error);
             return { error: error.message };
