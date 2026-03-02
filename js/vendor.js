@@ -240,16 +240,18 @@ async function loadVendorProducts(vendorId) {
 
 async function loadVendorOrders(vendorId) {
     const tbody = document.getElementById('vendorOrderList');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading orders...</td></tr>';
 
     try {
+        // We rely on RLS to filter only the items this vendor is allowed to see.
+        // This is simpler and more robust than complex join syntax.
         const { data: orderItems, error } = await window.supabaseClient
             .from('order_items')
             .select(`
                 *,
-                orders!inner (*),
-                products!inner (*)
-            `)
-            .eq('products.vendor_id', vendorId);
+                orders (*),
+                products (*)
+            `);
 
         if (error) throw error;
 
@@ -258,7 +260,8 @@ async function loadVendorOrders(vendorId) {
         let pendingCount = 0;
 
         orderItems.forEach(item => {
-            if (!item.orders) return;
+            // Check if joined data exists (RLS might filter them out)
+            if (!item.orders || !item.products) return;
 
             totalSales += (item.price * item.quantity);
 
@@ -304,9 +307,9 @@ async function loadVendorOrders(vendorId) {
                     <td><span class="status-badge status-${order.status}">${order.status}</span></td>
                     <td>
                         <div style="font-size: 0.85rem; line-height: 1.3;">
-                            <div style="font-weight: 500;">${order.building}</div>
-                            <div>${order.ward ? order.ward + ', ' : ''}${order.town}</div>
-                            <div>${order.district}, ${order.state}</div>
+                            <div style="font-weight: 500;">${order.building || 'N/A'}</div>
+                            <div>${order.ward ? order.ward + ', ' : ''}${order.town || ''}</div>
+                            <div>${order.district || ''}, ${order.state || ''}</div>
                             ${order.landmark ? `<div style="font-style: italic; font-size: 0.75rem; color: #777;">Landmark: ${order.landmark}</div>` : ''}
                             ${order.latitude ? `<div style="margin-top: 0.3rem;"><a href="https://www.google.com/maps?q=${order.latitude},${order.longitude}" target="_blank" style="color: var(--color-primary); font-weight: 500;">📍 View Location Map</a></div>` : ''}
                         </div>
@@ -323,8 +326,13 @@ async function loadVendorOrders(vendorId) {
             }).join('');
         }
     } catch (err) {
-        console.error(err);
-        if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Failed to load orders.</td></tr>';
+        console.error('Vendor Dashboard Error:', err);
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">
+                <strong>Failed to load orders.</strong><br>
+                <small>${err.message}</small>
+            </td></tr>`;
+        }
     }
 }
 
