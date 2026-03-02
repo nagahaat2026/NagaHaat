@@ -246,8 +246,8 @@ async function loadVendorOrders(vendorId) {
             .from('order_items')
             .select(`
                 *,
-                orders (*),
-                products (*)
+                orders!inner (*),
+                products!inner (*)
             `)
             .eq('products.vendor_id', vendorId);
 
