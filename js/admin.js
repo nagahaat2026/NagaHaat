@@ -42,6 +42,16 @@ async function loadAdminDashboardStats() {
 
     const products = await window.NagaProducts.getAllProducts();
     document.getElementById('adminStatProducts').textContent = products.length;
+
+    // Calculate Total Platform Volume
+    const { data: orders, error: ordersErr } = await sb.from('orders').select('total_price');
+    if (!ordersErr && orders) {
+        const totalVolume = orders.reduce((sum, order) => sum + (parseFloat(order.total_price) || 0), 0);
+        const volumeEl = document.getElementById('adminStatVolume');
+        if (volumeEl) {
+            volumeEl.textContent = window.NagaHaatUI.formatCurrency(totalVolume);
+        }
+    }
 }
 
 async function loadVendorList() {
