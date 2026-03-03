@@ -139,12 +139,25 @@
 
                 <div
                     style="border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 1.5rem 0; margin-bottom: 1.5rem;">
-                    <div id="pdPrice" style="color: #111; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">
+
+                    <div id="pdDiscountInfo" style="display: none; margin-bottom: 0.5rem;">
+                        <span style="color: #b12704; font-size: 1.5rem; font-weight: 400;">-<span
+                                id="pdDiscountPercent">0</span>%</span>
+                        <span id="pdPrice"
+                            style="color: #111; font-size: 2.2rem; font-weight: 800; margin-left: 0.5rem;">₹0.00</span>
+                    </div>
+
+                    <div id="pdStandardPrice"
+                        style="color: #111; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">
                         ₹0.00</div>
-                    <div style="color: #2e7d32; font-weight: 700; font-size: 1rem;">FREE delivery Wed, March 5</div>
+
+                    <div id="pdMRPInfo" style="font-size: 0.9rem; color: #565959; margin-bottom: 1rem; display: none;">
+                        M.R.P.: <span id="pdOriginalPrice" style="text-decoration: line-through;">₹0.00</span>
+                    </div>
+
+                    <div style="color: #2e7d32; font-weight: 700; font-size: 1.1rem;">FREE delivery Wed, March 5</div>
                     <div style="font-size: 0.85rem; color: #555; margin-top: 0.25rem;">Or fastest delivery <span
-                            style="font-weight: 700;">Tomorrow</span>. Order within <span style="color: #b12704;">4 hrs
-                            12 mins</span>.</div>
+                            style="font-weight: 700;">Tomorrow</span>.</div>
                 </div>
 
                 <p id="pdDescription" style="color: #333; line-height: 1.7; margin-bottom: 2rem; font-size: 1.05rem;">
@@ -226,11 +239,24 @@
                 document.getElementById('pdImage').src = product.image_url;
                 document.getElementById('pdImage').alt = product.title;
                 document.getElementById('pdTitle').textContent = product.title;
-                document.getElementById('pdPrice').textContent = window.NagaHaatUI.formatCurrency(product.price);
                 document.getElementById('pdDescription').textContent = product.description;
                 document.getElementById('pdVendorName').textContent = product.vendor_name;
                 document.getElementById('pdVendorInitial').textContent = product.vendor_name.charAt(0).toUpperCase();
                 document.getElementById('bcCategory').textContent = product.category;
+
+                // Handle Price & Discounts
+                if (product.original_price && product.original_price > product.price) {
+                    const discount = Math.round(((product.original_price - product.price) / product.original_price) * 100);
+                    document.getElementById('pdStandardPrice').style.display = 'none';
+                    document.getElementById('pdDiscountInfo').style.display = 'block';
+                    document.getElementById('pdMRPInfo').style.display = 'block';
+
+                    document.getElementById('pdDiscountPercent').textContent = discount;
+                    document.getElementById('pdPrice').textContent = window.NagaHaatUI.formatCurrency(product.price);
+                    document.getElementById('pdOriginalPrice').textContent = window.NagaHaatUI.formatCurrency(product.original_price);
+                } else {
+                    document.getElementById('pdStandardPrice').textContent = window.NagaHaatUI.formatCurrency(product.price);
+                }
 
                 // Ratings
                 const stars = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));

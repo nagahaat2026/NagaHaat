@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
                 price: parseFloat(document.getElementById('price').value),
+                original_price: document.getElementById('original_price').value ? parseFloat(document.getElementById('original_price').value) : null,
                 category: document.getElementById('category').value,
                 stock: parseInt(document.getElementById('stock').value),
                 image_url: imageUrl,

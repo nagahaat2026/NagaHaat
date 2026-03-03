@@ -3,7 +3,9 @@
 const NagaHaatUI = (function () {
 
     function formatCurrency(amount) {
-        return `₹${parseFloat(amount).toFixed(2)}`;
+        const val = parseFloat(amount);
+        if (val % 1 === 0) return `₹${val.toLocaleString('en-IN')}`;
+        return `₹${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
     function initAuthHeader() {

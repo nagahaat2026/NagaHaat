@@ -108,6 +108,7 @@
                     title: productData.title,
                     description: productData.description,
                     price: productData.price,
+                    original_price: productData.original_price,
                     category: productData.category,
                     stock: productData.stock,
                     image_url: productData.image_url,
@@ -152,6 +153,7 @@
                     title: productData.title,
                     description: productData.description,
                     price: productData.price,
+                    original_price: productData.original_price,
                     category: productData.category,
                     stock: productData.stock,
                     image_url: productData.image_url
