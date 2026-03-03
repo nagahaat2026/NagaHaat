@@ -78,6 +78,28 @@
             gap: 1rem;
         }
 
+        .category-section {
+            margin-bottom: 3rem;
+        }
+
+        .category-section-title {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .category-section-title span {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #666;
+            font-family: var(--font-main);
+        }
+
         .product-card {
             border: 1px solid #eee !important;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
@@ -233,8 +255,8 @@
                         <div style="font-size: 0.95rem; color: #666;"><span id="resultCount">0</span> products</div>
                     </div>
 
-                    <div class="showcase-grid" id="mainProductGrid">
-                        <!-- Dynamic Products Injected via JS -->
+                    <div class="main-product-listings" id="mainProductGrid">
+                        <!-- Dynamic Sections & Products Injected via JS -->
                     </div>
                 </div>
             </div>
@@ -403,14 +425,49 @@
 
         function renderShowcase(products) {
             const grid = document.getElementById('mainProductGrid');
-            document.getElementById('resultCount').textContent = products.length;
+            const resultCount = document.getElementById('resultCount');
+            const resultHeading = document.getElementById('resultHeading');
+
+            resultCount.textContent = products.length;
 
             if (products.length === 0) {
                 grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #888; font-size: 1.2rem; background: #fafafa; border-radius: 8px; border: 1px dashed #ccc;">No treasures matched your criteria. Try adjusting your filters!</div>';
                 return;
             }
 
-            grid.innerHTML = products.map(p => {
+            // If a specific category is selected, or if we are searching (which usually returns mixed cats) 
+            // but the user specifically asked for "separated by category", we should ALWAYS group unless it's a single cat.
+
+            const categories = [...new Set(products.map(p => p.category))].sort();
+
+            if (currentCategory !== 'all' && currentCategory !== 'All') {
+                resultHeading.textContent = currentCategory;
+                grid.innerHTML = `<div class="showcase-grid">${renderProductList(products)}</div>`;
+            } else {
+                resultHeading.textContent = "All Treasures";
+
+                let html = '';
+                categories.forEach(cat => {
+                    const catProducts = products.filter(p => p.category === cat);
+                    if (catProducts.length > 0) {
+                        html += `
+                            <div class="category-section">
+                                <div class="category-section-title">
+                                    ${cat} <span>${catProducts.length} items</span>
+                                </div>
+                                <div class="showcase-grid">
+                                    ${renderProductList(catProducts)}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                grid.innerHTML = html;
+            }
+        }
+
+        function renderProductList(products) {
+            return products.map(p => {
                 const stars = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
 
                 // Calculate discount if original_price exists
@@ -419,7 +476,7 @@
 
                 if (p.original_price && p.original_price > p.price) {
                     const discount = Math.round(((p.original_price - p.price) / p.original_price) * 100);
-                    discountBadge = `<span style="position: absolute; top: 0.5rem; right: 0.5rem; background: #b12704; color: white; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; z-index: 2;">SAVE ${discount}%</span>`;
+                    discountBadge = `<span style="position: absolute; top: 0.5rem; right: 0.5rem; background: #388e3c; color: white; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; z-index: 2;">SAVE ${discount}%</span>`;
                     priceDisplay = `
                         <div class="flex items-center gap-xs" style="margin-bottom: 0.1rem; flex-wrap: wrap;">
                             <span style="font-size: 1.1rem; font-weight: 800; color: #111;">${window.NagaHaatUI.formatCurrency(Math.round(p.price))}</span>
@@ -432,24 +489,18 @@
                 <a href="product.html?id=${p.id}" class="card product-card flex flex-col" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; background: white; position: relative;">
                     ${discountBadge}
                     <div style="position: relative; overflow: hidden; background: #f9f9f9; border-bottom: 1px solid #eee;">
-                        <img src="${p.image_url}" alt="${p.title}" style="width: 100%; height: 130px; object-fit: cover;">
+                        <img src="${p.image_url}" alt="${p.title}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block;">
                     </div>
                     <div style="padding: 0.65rem; flex-grow: 1; display: flex; flex-direction: column;">
-                        <h3 style="font-size: 0.85rem; margin-bottom: 0.2rem; color: var(--color-dark); font-family: var(--font-heading); line-height: 1.2; height: 2rem; overflow: hidden;">${p.title}</h3>
+                        <h3 style="font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--color-dark); font-family: var(--font-heading); line-height: 1.2; height: 2rem; overflow: hidden; margin-top: 0;">${p.title}</h3>
                         
-                        ${(p.review_count > 0) ? `
-                        <div class="flex items-center gap-xs" style="margin-bottom: 0.3rem;">
-                            <span style="color: #f5a623; font-size: 0.75rem;">${stars}</span>
-                            <span style="color: #666; font-size: 0.7rem; margin-left: 2px;">(${p.review_count})</span>
-                        </div>
-                        ` : '<div style="height: 1.15rem;"></div>'}
-
                         <div style="margin-top: auto;">
                             ${priceDisplay}
                         </div>
                     </div>
                 </a>
-            `}).join('');
+            `;
+            }).join('');
         }
     </script>
     </script>

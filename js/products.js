@@ -8,6 +8,7 @@
             const { data, error } = await sb
                 .from('products')
                 .select('*')
+                .eq('is_active', true)
                 .order('created_at', { ascending: false });
 
             if (error) {
@@ -29,7 +30,7 @@
         },
 
         async getProductsByCategory(category, filters = {}) {
-            let query = sb.from('products').select('*');
+            let query = sb.from('products').select('*').eq('is_active', true);
 
             if (category && category !== 'all' && category !== 'All') {
                 query = query.eq('category', category);
@@ -55,7 +56,7 @@
         },
 
         async searchProducts(query, category = 'all') {
-            let dbQuery = sb.from('products').select('*');
+            let dbQuery = sb.from('products').select('*').eq('is_active', true);
 
             if (category && category !== 'all' && category !== 'All') {
                 dbQuery = dbQuery.eq('category', category);
@@ -78,6 +79,7 @@
             const { data, error } = await sb
                 .from('products')
                 .select('*')
+                .eq('is_active', true)
                 .order('rating', { ascending: false })
                 .limit(count);
 
@@ -127,6 +129,7 @@
                 .from('products')
                 .select('*')
                 .eq('vendor_id', vendorId)
+                .eq('is_active', true)
                 .order('created_at', { ascending: false });
 
             if (error) {
@@ -139,10 +142,10 @@
         async deleteProduct(id) {
             const { error } = await sb
                 .from('products')
-                .delete()
+                .update({ is_active: false })
                 .eq('id', id);
 
-            if (error) throw new Error('Failed to delete product: ' + error.message);
+            if (error) throw new Error('Failed to deactivate product: ' + error.message);
             return true;
         },
 

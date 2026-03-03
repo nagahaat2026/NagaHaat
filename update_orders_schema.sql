@@ -38,3 +38,6 @@ USING (
     AND products.vendor_id = auth.uid()
   )
 );
+-- 3. PRODUCT ENHANCEMENTS (OFFERS & SOFT DELETE)
+ALTER TABLE products ADD COLUMN IF NOT EXISTS original_price NUMERIC(10,2);
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
