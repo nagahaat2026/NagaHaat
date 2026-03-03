@@ -43,17 +43,6 @@
             margin-top: 1rem;
         }
 
-        @media (max-width: 992px) {
-            .marketplace-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar-filters {
-                display: none;
-                /* Hide sidebar on mobile for now or make it a drawer later */
-            }
-        }
-
         .sidebar-filters {
             background: #fff;
             padding: 1.25rem;
@@ -61,21 +50,73 @@
             border: 1px solid #eee;
             height: fit-content;
             position: sticky;
-            top: 75px;
-            max-height: calc(100vh - 100px);
+            top: 130px;
+            /* Adjusted for sticky header */
+            max-height: calc(100vh - 150px);
             overflow-y: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-filters::-webkit-scrollbar {
             display: none;
         }
 
+        @media (max-width: 992px) {
+            .marketplace-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .sidebar-filters {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100vh;
+                max-height: 100vh;
+                z-index: 2000;
+                border-radius: 0;
+                transform: translateX(-100%);
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar-filters.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1999;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .hide-desktop {
+                display: flex !important;
+            }
+        }
+
         .showcase-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
             gap: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .showcase-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
         }
 
         .category-section {
@@ -149,6 +190,109 @@
             border-bottom: 1px solid #eee;
         }
 
+        /* Mobile specific header adjustments */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 0.5rem 1rem !important;
+            }
+
+            .search-container {
+                order: 3;
+                width: 100%;
+                margin: 0.5rem 0 !important;
+                max-width: none !important;
+            }
+
+            .logo {
+                min-width: auto !important;
+            }
+
+            .user-actions {
+                min-width: auto !important;
+            }
+
+            #searchCategory {
+                display: none;
+                /* Hide category dropdown on mobile to save space */
+            }
+
+            #globalSearch {
+                border-radius: 8px 0 0 8px !important;
+            }
+
+            .sticky-mobile-filter {
+                display: flex !important;
+                position: sticky;
+                top: 110px;
+                /* Adjust based on header height */
+                z-index: 999;
+                background: white;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #eee;
+                margin: 0 -1rem 1rem -1rem;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            #storefront {
+                padding: 0.5rem 1rem 2rem 1rem !important;
+            }
+
+            .showcase-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.35rem !important;
+            }
+
+            .product-card {
+                font-size: 0.65rem !important;
+            }
+
+            .product-card>div:last-child {
+                padding: 0.35rem !important;
+            }
+
+            .product-card h3 {
+                font-size: 0.7rem !important;
+                height: 1.7rem !important;
+                margin-bottom: 0.2rem !important;
+                /* Essential for 3-column stability */
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .product-card .flex.items-center span:first-child,
+            .product-card div[style*="font-weight: 800"] {
+                font-size: 0.85rem !important;
+            }
+
+            .product-card span[style*="font-size: 0.8rem"] {
+                font-size: 0.65rem !important;
+            }
+
+            .footer-grid {
+                padding: 2rem 1rem !important;
+                gap: 2rem !important;
+            }
+
+            .site-footer {
+                text-align: center;
+            }
+
+            .footer-grid>div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-grid ul {
+                text-align: center;
+            }
+        }
+
         body {
             overflow-x: hidden;
         }
@@ -196,12 +340,29 @@
         </div>
     </header>
 
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <!-- Main Content -->
     <main>
         <section id="storefront" style="padding: 1rem 2rem 2rem 2rem; max-width: 1440px; margin: 0 auto;">
+
+            <!-- Sticky Filter Toggle for Mobile -->
+            <div class="sticky-mobile-filter" style="display: none;">
+                <button id="mobileFilterBtn"
+                    style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; color: var(--color-primary);">
+                    <span>📂</span> Filters & Categories
+                </button>
+                <div style="font-size: 0.85rem; color: #666;"><span id="resultCountMobile">0</span> items</div>
+            </div>
+
             <div class="marketplace-layout">
                 <!-- Sidebar Filters -->
-                <aside class="sidebar-filters">
+                <aside class="sidebar-filters" id="sidebarFilters">
+                    <div class="flex justify-between items-center mb-md hide-desktop" style="display: none;">
+                        <h3 style="margin: 0;">Filters</h3>
+                        <button id="closeFilters" style="font-size: 1.5rem; color: #999;">&times;</button>
+                    </div>
                     <div class="filter-group" style="margin-bottom: 1.5rem;">
                         <h4>Categories</h4>
                         <div id="categoryNav">
@@ -369,6 +530,34 @@
             // Initial load
             const allProducts = await window.NagaProducts.getAllProducts();
             renderShowcase(allProducts);
+
+            // Mobile Filter Drawer Logic
+            const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+            const sidebarFilters = document.getElementById('sidebarFilters');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeFilters = document.getElementById('closeFilters');
+
+            const toggleFilters = () => {
+                sidebarFilters.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+                document.body.style.overflow = sidebarFilters.classList.contains('active') ? 'hidden' : '';
+            };
+
+            mobileFilterBtn.onclick = toggleFilters;
+            sidebarOverlay.onclick = toggleFilters;
+            closeFilters.onclick = toggleFilters;
+
+            // Close on filter selection for mobile
+            document.querySelectorAll('.cat-btn, .price-filter, .rating-filter').forEach(el => {
+                el.addEventListener('click', () => {
+                    if (window.innerWidth <= 992 && (el.tagName === 'BUTTON' || el.type === 'checkbox')) {
+                        // Small delay to show selection before closing
+                        setTimeout(() => {
+                            if (sidebarFilters.classList.contains('active')) toggleFilters();
+                        }, 300);
+                    }
+                });
+            });
         });
 
         async function performSearch(query, category) {
@@ -426,9 +615,11 @@
         function renderShowcase(products) {
             const grid = document.getElementById('mainProductGrid');
             const resultCount = document.getElementById('resultCount');
+            const resultCountMobile = document.getElementById('resultCountMobile');
             const resultHeading = document.getElementById('resultHeading');
 
             resultCount.textContent = products.length;
+            if (resultCountMobile) resultCountMobile.textContent = products.length;
 
             if (products.length === 0) {
                 grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #888; font-size: 1.2rem; background: #fafafa; border-radius: 8px; border: 1px dashed #ccc;">No treasures matched your criteria. Try adjusting your filters!</div>';
