@@ -17,18 +17,82 @@ const NagaHaatUI = (function () {
         const rootPrefix = isSubfolder ? '../' : '';
 
         if (session) {
+            const firstName = session.full_name.split(' ')[0];
+
+            // Standard Desktop Header
             authContainer.innerHTML = `
                 <div class="flex items-center gap-sm">
-                    <span style="font-size: 0.9rem; font-weight: 500;">Hi, ${session.full_name.split(' ')[0]}</span>
-                    <a href="${rootPrefix}my-orders.html" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">My Orders</a>
-                    <button onclick="window.NagaAuth.logout()" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Logout</button>
+                    <span class="hide-mobile" style="font-size: 0.9rem; font-weight: 500;">Hi, ${firstName}</span>
+                    
+                    <!-- Mobile Exclusive Items -->
+                    <span class="mobile-user-name" style="display: none;">${firstName}</span>
+                    <div class="profile-trigger-mobile" style="display: none;" onclick="window.NagaHaatUI.toggleUserDrawer()">
+                        👤
+                    </div>
+
+                    <!-- Desktop Actions -->
+                    <div class="flex items-center gap-sm hide-mobile">
+                        <a href="${rootPrefix}my-orders.html" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">My Orders</a>
+                        <button onclick="window.NagaAuth.logout()" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Logout</button>
+                    </div>
                 </div>
             `;
+
+            // Populate User Drawer (Mobile)
+            const drawerLinks = document.getElementById('userDrawerLinks');
+            if (drawerLinks) {
+                drawerLinks.innerHTML = `
+                    <a href="${rootPrefix}my-orders.html" class="drawer-link">📦 My Orders</a>
+                    <button onclick="window.NagaAuth.logout()" class="drawer-link" style="width: 100%; border: none; background: none; cursor: pointer; font-family: inherit;">🚪 Logout</button>
+                `;
+            }
         } else {
             authContainer.innerHTML = `
                 <a href="${rootPrefix}login.html" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Log In</a>
                 <a href="${rootPrefix}register.html" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Sign Up</a>
+                
+                <!-- Mobile Only Profile (when logged out) -->
+                <div class="profile-trigger-mobile" style="display: none;" onclick="window.location.href='${rootPrefix}login.html'">
+                    👤
+                </div>
             `;
+        }
+    }
+
+    function toggleUserDrawer() {
+        const drawer = document.getElementById('userDrawer');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (!drawer || !overlay) return;
+
+        const isActive = drawer.classList.contains('active');
+        if (isActive) {
+            drawer.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        } else {
+            drawer.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Close filter sidebar if open
+            const filterSidebar = document.getElementById('sidebarFilters');
+            if (filterSidebar) filterSidebar.classList.remove('active');
+        }
+    }
+
+    function initDrawerLogic() {
+        const closeBtn = document.getElementById('closeUserDrawer');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (closeBtn) closeBtn.onclick = toggleUserDrawer;
+        if (overlay) {
+            // Only add if not already handled for filters or handle both
+            const currentClick = overlay.onclick;
+            overlay.onclick = () => {
+                if (currentClick) currentClick();
+                const drawer = document.getElementById('userDrawer');
+                if (drawer && drawer.classList.contains('active')) toggleUserDrawer();
+            };
         }
     }
 
@@ -100,13 +164,16 @@ const NagaHaatUI = (function () {
         formatCurrency,
         initAuthHeader,
         initCartCounters,
-        confirm
+        confirm,
+        toggleUserDrawer,
+        initDrawerLogic
     };
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
     NagaHaatUI.initAuthHeader();
     NagaHaatUI.initCartCounters();
+    NagaHaatUI.initDrawerLogic();
 });
 
 // Ensure global exact reference
